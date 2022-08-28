@@ -1,0 +1,19 @@
+{
+    "name": "ts-discord-bot",
+    "version": "1.0.0",
+    "description": "A typescript template for your discord.js bot",
+    "main": "dist/index.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/cit999/ts-discord-bot.git"
+    },
+    "bugs": {
+        "url": "https://github.com/cit999/ts-discord-bot/issues"
+    },
+    "homepage": "https://github.com/cit999/ts-discord-bot#readme",
+    "author": "cit999",
+    "license": "MIT",
+    "dependencies": {
+        "discord.js": "^14.3.0"
+    }
+}
