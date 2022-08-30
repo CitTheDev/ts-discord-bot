@@ -1,8 +1,9 @@
 import { Client, Collection } from "discord.js";
-import { ClientDataOptions, CustomClientOptions } from "../Interfaces/ClientOptions";
-import { Command } from "../Interfaces/Command";
-import { Event } from "../Interfaces/Event";
-import { Handler } from "./Handler";
+import mongoose from "mongoose";
+import { ClientDataOptions, CustomClientOptions } from "../Interfaces/ClientOptions.js";
+import { Command } from "../Interfaces/Command.js";
+import { Event } from "../Interfaces/Event.js";
+import { Handler } from "./Handler.js";
 
 export class CustomClient extends Client {
     public commands: Collection<string, Command>;
@@ -11,8 +12,7 @@ export class CustomClient extends Client {
     public handlers: Handler;
     /**
      * Initialise the client
-     * @param {ClientOptions} options 
-     * @param {{ token: string, database: string, developerGuilds?: string[] }} options.data
+     * @param {import("../Interfaces/ClientOptions").CustomClientOptions} options 
      */
     constructor (options: CustomClientOptions) {
         super (options);
@@ -20,5 +20,16 @@ export class CustomClient extends Client {
         this.events = new Collection();
         this.data = options.data;
         this.handlers = new Handler(this);
+    }
+
+    /**
+     * Start the client
+     */
+    async start() {
+        this.handlers.loadEvents(this.data.handlers.events);
+        this.handlers.loadCommands(this.data.handlers.commands);
+        await mongoose.connect(this.data.database);
+
+        this.login(this.data.token);
     }
 }

@@ -1,4 +1,4 @@
-export interface Event extends globalThis.Event {
+export interface Event {
     name: string;
     once?: boolean;
     rest?: boolean;

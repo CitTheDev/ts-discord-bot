@@ -1,7 +1,7 @@
-import { getAllFiles } from "../Functions/get-files";
-import { Command } from "../Interfaces/Command";
-import { Event } from "../Interfaces/Event";
-import { CustomClient } from "./Client";
+import { getAllFiles } from "../Functions/get-files.js";
+import { Command } from "../Interfaces/Command.js";
+import { Event } from "../Interfaces/Event.js";
+import { CustomClient } from "./Client.js";
 
 export class Handler {
     #client: CustomClient;
