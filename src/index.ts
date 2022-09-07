@@ -1,5 +1,6 @@
 import { CustomClient } from "./Structure/index.js";
 import config from "./config";
+import { GatewayIntentBits, Partials } from "discord.js";
 
 const client = new CustomClient({
     data: {
@@ -8,7 +9,20 @@ const client = new CustomClient({
         handlers: config.handlers,
         developerGuilds: config.developerGuilds
     },
-    intents: 131071
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildPresences
+    ],
+    partials: [
+        Partials.Channel,
+        Partials.GuildMember,
+        Partials.Message,
+        Partials.User,
+        Partials.ThreadMember
+    ]
 });
 
 client.start();
