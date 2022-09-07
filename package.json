@@ -2,7 +2,6 @@
     "name": "ts-discord-bot",
     "version": "1.0.0",
     "description": "A typescript template for your discord.js bot",
-    "type": "module",
     "main": "dist/index.js",
     "repository": {
         "type": "git",

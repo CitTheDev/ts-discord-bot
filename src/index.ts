@@ -1,10 +1,12 @@
 import { CustomClient } from "./Structure/index.js";
+import config from "./config";
+
 const client = new CustomClient({
     data: {
-        token: "TOKEN",
-        database: "URL",
-        handlers: { commands: "./dist/commands", events: "./dist/events" },
-        developerGuilds: ["id1", "id2"]
+        token: config.token,
+        database: config.database,
+        handlers: config.handlers,
+        developerGuilds: config.developerGuilds
     },
     intents: 131071
 });
