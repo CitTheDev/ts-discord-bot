@@ -24,7 +24,7 @@ export class Handler {
         let developerCommands: Command[] = [];
 
         files.forEach(async (file) => {
-            const command: Command = require(file).default;
+            const command: Command = (await import(file)).default;
 
             if (command.developer) developerCommands.push(command);
             else publicCommands.push(command);
@@ -56,7 +56,7 @@ export class Handler {
         if (!files.length) return;
 
         files.forEach(async (file) => {
-            const event: Event = require(file).default;
+            const event: Event = (await import(file)).default;
             const directory: string = `${file.split("/").at(-2)}/${file.split("/").at(-1)}`;
 
             this.#client.events.set(event.name + `-${directory}`, event);
