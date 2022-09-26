@@ -1,9 +1,5 @@
 import fs from "fs";
 
-/**
- * Get all files from a given directory
- * @param {string} directory 
- */
 export const getAllFiles = (directory: string) => {
     let fileArray: string[] = [];
     const files = fs.readdirSync(directory);
