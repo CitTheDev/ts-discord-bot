@@ -6,30 +6,20 @@ import { Event } from "../Interfaces/Event.js";
 import { Handler } from "./Handler.js";
 
 export class CustomClient extends Client {
-    public commands: Collection<string, Command>;
-    public events: Collection<string, Event>;
+    public commands: Collection<string, Command> = new Collection();
+    public events: Collection<string, Event> = new Collection();
     public data: ClientDataOptions;
-    public handlers: Handler;
-    /**
-     * Initialise the client
-     * @param {import("../Interfaces/ClientOptions").CustomClientOptions} options 
-     */
+    public handlers: Handler = new Handler(this);
     constructor (options: CustomClientOptions) {
-        super (options);
-        this.commands = new Collection();
-        this.events = new Collection();
+        super(options);
         this.data = options.data;
-        this.handlers = new Handler(this);
     }
 
-    /**
-     * Start the client
-     */
     async start() {
         this.handlers.loadEvents(this.data.handlers.events);
         this.handlers.loadCommands(this.data.handlers.commands);
-        await mongoose.connect(this.data.database);
 
         this.login(this.data.token);
+        mongoose.connect(this.data.database).then(() => console.log("Connected to the database"));
     }
 }
