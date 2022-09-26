@@ -5,18 +5,10 @@ import { CustomClient } from "./Client.js";
 
 export class Handler {
     #client: CustomClient;
-    /**
-     * Create a new handler instance
-     * @param {CustomClient} client 
-     */
     constructor (client: CustomClient) {
         this.#client = client;
     }
 
-    /**
-     * Load the commands
-     * @param {string} directory 
-     */
     loadCommands(directory: string) {
         const files = getAllFiles(directory);
         if (!files.length) return;
@@ -30,16 +22,17 @@ export class Handler {
             else publicCommands.push(command);
 
             this.#client.commands.set(command.name, command);
-            return delete require.cache[require.resolve(file)];
         });
 
         const pushCommands = async () => {
             await this.#client.application?.commands.set(publicCommands);
+            console.log("Global Commands Have Been Registered");
             this.#client.data.developerGuilds?.forEach(async (id: string) => {
-                const guild = this.#client.guilds.cache.get(id);
+                const guild = await this.#client.guilds.fetch(id);
                 if (!guild) return;
 
                 await guild.commands.set(developerCommands);
+                console.log(`Developer Commands to "${guild.name}" Have Been Registered`);
             });
         }
 
@@ -47,10 +40,6 @@ export class Handler {
         else pushCommands();
     }
 
-    /**
-     * Load the events
-     * @param {string} directory 
-     */
     loadEvents(directory: string) {
         const files = getAllFiles(directory);
         if (!files.length) return;
@@ -69,11 +58,6 @@ export class Handler {
         });
     }
 
-    /**
-     * Reload systems
-     * @param {"commands" | "events"} system 
-     * @param {string} directory 
-     */
     async reload(system: "commands" | "events", directory: string) {
         if (system === "events") {
             for (const [ key, value ] of this.#client.events) {
