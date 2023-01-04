@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAllFiles } from "../functions/get-files.js";
-import { SlashCommand, Event } from "../interfaces/index.js";
+import { SlashCommand, Event, ContextCommand, MessageCommand } from "../interfaces/index.js";
 import { CustomClient } from "./Client.js";
 
 export class Handler {
@@ -16,14 +16,14 @@ export class Handler {
         const developerCommands: any[] = [];
 
         files.forEach(async (file) => {
-            const command = (await import("file://" + file)).default;
+            const command: SlashCommand | ContextCommand | MessageCommand = (await import("file://" + file)).default;
 
             if (command.data?.developerGuild) developerCommands.push(command.data);
             else publicCommands.push(command.data);
 
             this.client.commands.set(command.data?.name, command.data);
 
-            if (command instanceof SlashCommand && command.data?.autcomplete) this.client.autocomplete.set(command.data?.name, (await import("file://" + file)).default.data);
+            if (command instanceof SlashCommand && command.data?.autcomplete) this.client.autocomplete.set(command.data?.name, command);
         });
 
         const pushCommands = async () => {
