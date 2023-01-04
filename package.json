@@ -3,6 +3,9 @@
     "version": "2.0.0",
     "description": "A typescript template for your discord.js bot",
     "main": "dist/index.js",
+    "scripts": {
+        "start": "tsc && node ."
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/cit999/ts-discord-bot.git"
