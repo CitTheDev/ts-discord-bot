@@ -9,13 +9,13 @@ export class Handler {
         this.client = client;
     }
 
-    loadCommands(directory: string) {
+    async loadCommands(directory: string) {
         const files = getAllFiles(directory);
         if (!files.length) return;
         const publicCommands: any[] = [];
         const developerCommands: any[] = [];
 
-        files.forEach(async (file) => {
+        for await (const file of files) {
             const command: SlashCommand | ContextCommand | MessageCommand = (await import("file://" + file)).default;
 
             if (command.data?.developerGuild) developerCommands.push(command.data);
@@ -24,7 +24,7 @@ export class Handler {
             this.client.commands.set(command.data?.name, command.data);
 
             if (command instanceof SlashCommand && command.data?.autcomplete) this.client.autocomplete.set(command.data?.name, command);
-        });
+        }
 
         const pushCommands = async () => {
             this.client.data.developerGuilds?.forEach(async (id: string) => {
@@ -40,11 +40,11 @@ export class Handler {
         else pushCommands();
     }
 
-    loadEvents(directory: string) {
+    async loadEvents(directory: string) {
         const files = getAllFiles(directory);
         if (!files.length) return;
 
-        files.forEach(async (file) => {
+        for await (const file of files) {
             const { data: event }: Event = (await import("file://" + file)).default;
 
             const execute = (...args: unknown[]) => event?.execute(...args, this.client);
@@ -52,7 +52,7 @@ export class Handler {
             if (event?.event !== null) event?.once ? this.client.once(event?.event, execute) : this.client.on(event?.event, execute);
             else if (event?.event === null && event?.restEvent) event?.once ? this.client.rest.once(event?.restEvent, execute) : this.client.rest.on(event?.restEvent, execute);
             else throw new TypeError(`Event ${file.split("/").at(-2)}/${file.split("/").at(-1)} has no event name`);
-        });
+        }
 
         console.log("Events have been loaded");
     }
