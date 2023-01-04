@@ -1,8 +1,8 @@
 import { CommandInteraction, EmbedBuilder, PermissionsBitField } from "discord.js";
-import { Event, CustomClient } from "../../Structure/index.js";
+import { Event, CustomClient } from "../../structure/index.js";
 
-export default {
-    name: "interactionCreate",
+export default new Event({
+    event: "interactionCreate",
     async execute(interaction: CommandInteraction, client: CustomClient) {
         if (!interaction.isCommand()) return;
         const command = client.commands.get(interaction.commandName);
@@ -39,4 +39,4 @@ export default {
 
         command.execute(interaction, client);
     }
-} as Event;
+});

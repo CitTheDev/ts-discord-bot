@@ -1,10 +1,10 @@
-import { CommandInteraction } from "discord.js";
-import { Command, CustomClient } from "../Structure/index.js";
+import { ChatInputCommandInteraction } from "discord.js";
+import { SlashCommand, CustomClient } from "../structure/index.js";
 
-export default {
+export default new SlashCommand({
     name: "ping",
     description: "Pong",
-    execute(interaction: CommandInteraction, client: CustomClient) {
+    execute(interaction: ChatInputCommandInteraction, client: CustomClient) {
         interaction.reply({ content: "Pong" });
     }
-} as Command;
+});

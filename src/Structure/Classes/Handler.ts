@@ -1,42 +1,42 @@
-import { getAllFiles } from "../Functions/get-files.js";
-import { Command } from "../Interfaces/Command.js";
-import { Event } from "../Interfaces/Event.js";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { getAllFiles } from "../functions/get-files.js";
+import { SlashCommand, Event } from "../interfaces/index.js";
 import { CustomClient } from "./Client.js";
 
 export class Handler {
-    #client: CustomClient;
+    private client: CustomClient;
     constructor (client: CustomClient) {
-        this.#client = client;
+        this.client = client;
     }
 
     loadCommands(directory: string) {
         const files = getAllFiles(directory);
         if (!files.length) return;
-        let publicCommands: Command[] = [];
-        let developerCommands: Command[] = [];
+        const publicCommands: any[] = [];
+        const developerCommands: any[] = [];
 
         files.forEach(async (file) => {
-            const command: Command = (await import(file)).default;
+            const command = (await import("file://" + file)).default;
 
-            if (command.developer) developerCommands.push(command);
-            else publicCommands.push(command);
+            if (command.data?.developerGuild) developerCommands.push(command.data);
+            else publicCommands.push(command.data);
 
-            this.#client.commands.set(command.name, command);
+            this.client.commands.set(command.data?.name, command.data);
+
+            if (command instanceof SlashCommand && command.data?.autcomplete) this.client.autocomplete.set(command.data?.name, (await import("file://" + file)).default.data);
         });
 
         const pushCommands = async () => {
-            await this.#client.application?.commands.set(publicCommands);
-            console.log("Global Commands Have Been Registered");
-            this.#client.data.developerGuilds?.forEach(async (id: string) => {
-                const guild = await this.#client.guilds.fetch(id);
+            this.client.data.developerGuilds?.forEach(async (id: string) => {
+                const guild = await this.client.guilds.fetch(id);
                 if (!guild) return;
 
                 await guild.commands.set(developerCommands);
-                console.log(`Developer Commands to "${guild.name}" Have Been Registered`);
+                console.log(`Developer commands have been pushed to ${guild.name}`);
             });
-        }
+        };
 
-        if (!this.#client.isReady()) this.#client.once("ready", () => pushCommands());
+        if (!this.client.isReady()) this.client.once("ready", () => pushCommands());
         else pushCommands();
     }
 
@@ -45,31 +45,15 @@ export class Handler {
         if (!files.length) return;
 
         files.forEach(async (file) => {
-            const event: Event = (await import(file)).default;
-            const directory: string = `${file.split("/").at(-2)}/${file.split("/").at(-1)}`;
+            const { data: event }: Event = (await import("file://" + file)).default;
 
-            this.#client.events.set(event.name + `-${directory}`, event);
-            const execute = (...args: any[]) => event.execute(...args, this.#client);
+            const execute = (...args: unknown[]) => event?.execute(...args, this.client);
 
-            if (event.rest) event.once ? this.#client.rest.once(event.name, execute) : this.#client.rest.on(event.name, execute);
-            else event.once ? this.#client.once(event.name, execute) : this.#client.on(event.name, execute);
-
-            return delete require.cache[require.resolve(file)];
+            if (event?.event !== null) event?.once ? this.client.once(event?.event, execute) : this.client.on(event?.event, execute);
+            else if (event?.event === null && event?.restEvent) event?.once ? this.client.rest.once(event?.restEvent, execute) : this.client.rest.on(event?.restEvent, execute);
+            else throw new TypeError(`Event ${file.split("/").at(-2)}/${file.split("/").at(-1)} has no event name`);
         });
-    }
 
-    async reload(system: "commands" | "events", directory: string) {
-        if (system === "events") {
-            for (const [ key, value ] of this.#client.events) {
-                if (value.rest) this.#client.rest.removeListener(key.split("-")[0], value.execute);
-                else this.#client.removeListener(key.split("-")[0], value.execute);
-            }
-
-            this.#client.events.clear();
-            this.loadEvents(directory);
-        } else {
-            this.#client.commands.clear();
-            this.loadCommands(directory)
-        };
+        console.log("Events have been loaded");
     }
 }

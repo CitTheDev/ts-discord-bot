@@ -1,9 +1,9 @@
-import { Event, CustomClient } from "../../Structure/index.js";
+import { Event, CustomClient } from "../../structure/index.js";
 
-export default {
-    name: "ready",
+export default new Event({
+    event: "ready",
     once: true,
     execute(client: CustomClient) {
         console.log(`Logged in as ${client.user?.tag}`);
     }
-} as Event;
+});

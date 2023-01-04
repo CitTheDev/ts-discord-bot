@@ -1,10 +1,12 @@
-import { CustomClient } from "./Structure/index.js";
-import config from "./config";
+import { CustomClient } from "./structure/index.js";
+import config from "./config.js";
 import { GatewayIntentBits, Partials } from "discord.js";
 
 const client = new CustomClient({
     data: {
-        token: config.token,
+        devBotEnabled: false,
+        productionToken: config.productionToken,
+        devBotToken: config.devToken,
         database: config.database,
         handlers: config.handlers,
         developerGuilds: config.developerGuilds

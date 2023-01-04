@@ -5,8 +5,10 @@ export interface CustomClientOptions extends ClientOptions {
 }
 
 export interface ClientDataOptions {
-    token: string;
+    productionToken: string;
+    devBotToken: string;
+    devBotEnabled?: boolean;
     database: string;
     developerGuilds?: string[];
-    handlers: { commands: string, events: string }
+    handlers: { commands: string, events: string },
 }

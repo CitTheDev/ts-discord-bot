@@ -1,6 +1,16 @@
-export interface Event {
-    name: string;
+import { ClientEvents, RestEvents } from "discord.js";
+
+export class Event {
+    public data: EventOptions;
+    constructor (options: EventOptions) {
+        this.data = options;
+    }
+}
+
+export interface EventOptions {
+    event: keyof ClientEvents | null;
+    restEvent?: keyof RestEvents;
     once?: boolean;
-    rest?: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     execute: (...args: any[]) => any;
 }
