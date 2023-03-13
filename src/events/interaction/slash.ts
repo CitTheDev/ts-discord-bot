@@ -1,25 +1,24 @@
-import { CommandInteraction, EmbedBuilder, PermissionsBitField } from "discord.js";
+import { CommandInteraction, EmbedBuilder, Events, PermissionsBitField } from "discord.js";
 import { Event, CustomClient } from "../../structure/index.js";
 
 export default new Event({
-    event: "interactionCreate",
+    event: Events.InteractionCreate,
     async execute(interaction: CommandInteraction, client: CustomClient) {
         if (!interaction.isCommand()) return;
         const command = client.commands.get(interaction.commandName);
         const embed = new EmbedBuilder();
-        await client.application?.fetch();
 
         if (!command) {
             embed
                 .setColor("Red")
-                .setDescription(`This command does not exist`);
+                .setDescription("This command does not exist");
             return await interaction.reply({ embeds: [embed], ephemeral: true }) && client.commands.delete(interaction.commandName);
         }
 
-        if (command.botOwnerOnly && client.application?.owner?.id !== interaction.user.id) {
+        if (command.botOwnerOnly && !client.data.botOwnerIds.includes(interaction.user.id)) {
             embed
                 .setColor("Red")
-                .setDescription(`This command is only available for the bot owner`);
+                .setDescription("This command is only available for the bot owner");
             return interaction.reply({ embeds: [embed], ephemeral: true });
         }
 

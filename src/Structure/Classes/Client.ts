@@ -1,7 +1,7 @@
 import { Client, Collection } from "discord.js";
 import mongoose from "mongoose";
 import { ClientDataOptions, CustomClientOptions, Cooldown, SlashCommand, BaseApplicationCommand } from "../interfaces/index.js";
-import { Handler } from "./Handler.js";
+import { Handler, Logger } from "./index.js";
 
 export class CustomClient extends Client {
     public commands: Collection<string, BaseApplicationCommand> = new Collection();
@@ -9,6 +9,7 @@ export class CustomClient extends Client {
     public autocomplete: Collection<string, SlashCommand> = new Collection();
     public data: ClientDataOptions;
     public handlers: Handler = new Handler(this);
+    public logger: Logger = new Logger();
     constructor (options: CustomClientOptions) {
         super (options);
         this.data = options.data;
@@ -22,7 +23,12 @@ export class CustomClient extends Client {
         this.login(this.data.devBotEnabled ? this.data.devBotToken : this.data.productionToken);
 
         mongoose.set("strictQuery", true);
-        mongoose.connect(this.data.database)
-            .then(() => console.log("Connected to the database"));
+        mongoose.connect(this.data.devBotEnabled && this.data.devDatabase ? this.data.devDatabase : this.data.database)
+            .then((data) => {
+                this.logger.info("Database", "Connected to: " + this.logger.highlight(data.connection.name, "success"));
+            })
+            .catch(() => {
+                this.logger.error("Database", "Error Connecting to Database!");
+            });
     }
 }

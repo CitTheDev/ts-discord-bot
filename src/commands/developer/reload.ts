@@ -20,7 +20,7 @@ export default new SlashCommand({
             .setColor("Green")
             .setDescription("<:approved:992377190274576454> Application commands have been pushed");
 
-        await client.application?.commands.set(Array.from(client.commands.values()).filter((command) => !command.developerGuild) as []);
+        await client.application?.commands.set(Array.from(client.commands.values()).filter((command) => command.developerGuild === false) as []);
 
         interaction.reply({ embeds: [embed], ephemeral: true });
     }

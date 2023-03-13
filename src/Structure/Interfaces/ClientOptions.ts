@@ -9,6 +9,10 @@ export interface ClientDataOptions {
     devBotToken: string;
     devBotEnabled?: boolean;
     database: string;
+    devDatabase?: string;
     developerGuilds?: string[];
     handlers: { commands: string, events: string },
+    logsChannel: string;
+    devLogsChannel?: string;
+    botOwnerIds: string[];
 }
