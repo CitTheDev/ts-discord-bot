@@ -1,7 +1,7 @@
 import fs from "fs";
 
 export const getAllFiles = (directory: string) => {
-    let fileArray: string[] = [];
+    const fileArray: string[] = [];
     const files = fs.readdirSync(directory);
 
     for (const file of files) {
