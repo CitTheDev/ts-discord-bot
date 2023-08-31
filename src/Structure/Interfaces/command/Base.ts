@@ -1,11 +1,12 @@
-import { BaseApplicationCommandData, ChatInputCommandInteraction, MessageContextMenuCommandInteraction, PermissionResolvable, UserContextMenuCommandInteraction } from "discord.js";
-import { CustomClient } from "../../classes/index.js";
+import { BaseApplicationCommandData, PermissionResolvable } from "discord.js";
+import { ContextCommand, ContextCommandData, MessageCommand, MessageCommandData, SlashCommand, SlashCommandData } from "./index.js";
+
+export type CommandDataTypes = SlashCommandData | ContextCommandData | MessageCommandData;
+export type CommandTypes = SlashCommand | ContextCommand | MessageCommand;
 
 export interface BaseApplicationCommand extends BaseApplicationCommandData {
     developerGuild?: boolean;
     cooldown?: number;
     botOwnerOnly?: boolean;
     botPermissions?: PermissionResolvable[];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    execute: (interaction: ChatInputCommandInteraction | UserContextMenuCommandInteraction | MessageContextMenuCommandInteraction, client: CustomClient) => any;
 }
