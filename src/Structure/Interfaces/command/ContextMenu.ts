@@ -1,5 +1,6 @@
-import { ApplicationCommandType } from "discord.js";
+import { ApplicationCommandType, UserContextMenuCommandInteraction } from "discord.js";
 import { BaseApplicationCommand } from "./Base.js";
+import { CustomClient } from "../../classes/Client.js";
 
 export class ContextCommand {
     public data: ContextCommandData;
@@ -11,4 +12,5 @@ export class ContextCommand {
 
 export interface ContextCommandData extends BaseApplicationCommand {
     type?: ApplicationCommandType.User;
+    execute: (interaction: UserContextMenuCommandInteraction, client: CustomClient) => unknown;
 }

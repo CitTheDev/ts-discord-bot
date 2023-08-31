@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionData, ApplicationCommandType, AutocompleteInteraction, LocalizationMap } from "discord.js";
+import { ApplicationCommandOptionData, ApplicationCommandType, AutocompleteInteraction, ChatInputCommandInteraction, LocalizationMap } from "discord.js";
 import { CustomClient } from "../../classes/index.js";
 import { BaseApplicationCommand } from "./Base.js";
 
@@ -6,6 +6,7 @@ export class SlashCommand {
     public data: SlashCommandData;
     constructor (options: SlashCommandData) {
         this.data = options;
+        this.data.type = ApplicationCommandType.ChatInput;
     }
 }
 
@@ -15,6 +16,7 @@ export interface SlashCommandData extends BaseApplicationCommand {
     options?: ApplicationCommandOptionData[];
     type?: ApplicationCommandType.ChatInput;
     autcomplete?: boolean;
+    execute: (interaction: ChatInputCommandInteraction, client: CustomClient) => unknown;
     executeAutocomplete?: (interaction: AutocompleteInteraction, client: CustomClient) => unknown;
 }
 
