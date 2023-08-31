@@ -1,10 +1,10 @@
 import { Client, Collection } from "discord.js";
 import mongoose from "mongoose";
-import { ClientDataOptions, CustomClientOptions, Cooldown, SlashCommand, BaseApplicationCommand } from "../interfaces/index.js";
+import { ClientDataOptions, CustomClientOptions, Cooldown, SlashCommand, CommandDataTypes } from "../interfaces/index.js";
 import { Handler, Logger } from "./index.js";
 
 export class CustomClient extends Client {
-    public commands: Collection<string, BaseApplicationCommand> = new Collection();
+    public commands: Collection<string, CommandDataTypes> = new Collection();
     public cooldowns: Collection<string, Cooldown> = new Collection();
     public autocomplete: Collection<string, SlashCommand> = new Collection();
     public data: ClientDataOptions;
