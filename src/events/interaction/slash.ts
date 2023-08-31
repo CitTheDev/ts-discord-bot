@@ -36,6 +36,6 @@ export default new Event({
             }
         }
 
-        command.execute(interaction, client);
+        command.execute(interaction as never, client);
     }
 });
